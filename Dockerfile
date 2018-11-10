@@ -48,6 +48,9 @@ RUN apt-get install -y tmux && \
     cd /usr/src/c9sdk && \
     scripts/install-sdk.sh
     
+# Jupyter
+RUN pip install jupyter
+    
 ENV CAFFE_ROOT=/usr/src/caffe/
 
 ENV C9_USERNAME ""
@@ -60,5 +63,6 @@ WORKDIR /root/digits/
 EXPOSE 8080
 EXPOSE 5000
 
-CMD bash -c 'echo -e "./digits-devserver | tee /var/log/digits.log & \\n/root/.c9/node/bin/node /usr/src/c9sdk/server.js" \
+CMD bash -c 'echo -e "./digits-devserver | tee /var/log/digits.log & \\n jupyter notebook" \
+    "--ip=0.0.0.0 --allow-root & \\n /root/.c9/node/bin/node /usr/src/c9sdk/server.js"
     "-p $C9_PORT -w $WORKSPACE_DIR -a $USERNAME:$PASSWORD -l 0.0.0.0 --packed >/dev/null 2>&1" | bash'
