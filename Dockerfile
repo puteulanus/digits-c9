@@ -21,7 +21,6 @@ RUN apt-get install -y --no-install-recommends build-essential cmake git gfortra
     python-all-dev python-dev python-h5py python-matplotlib python-numpy python-opencv python-pil \
     python-pip python-pydot python-scipy python-skimage python-sklearn && \
     git clone https://github.com/NVIDIA/caffe.git /usr/src/caffe -b 'caffe-0.15' && \
-    pip install -U pip && \
     pip install wheel && \
     pip install -r /usr/src/caffe/python/requirements.txt && \
     cd /usr/src/caffe && \
