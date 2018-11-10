@@ -27,13 +27,19 @@ RUN apt-get install -y --no-install-recommends build-essential cmake git gfortra
     cd build && \
     cmake .. && \
     make -j"$(nproc)" && \
-    make install && \
+    make install
 
 # Digits
 RUN apt-get install -y --no-install-recommends git graphviz python-dev python-flask python-flaskext.wtf \
       python-gevent python-h5py python-numpy python-pil python-pip python-scipy python-tk && \
     git clone https://github.com/NVIDIA/DIGITS.git /root/digits && \
     pip install -r /root/digits/requirements.txt
+    
+#Cloud9
+RUN apt-get install -y tmux which  && \
+    git clone https://github.com/c9/core.git /usr/src/c9sdk && \
+    cd /usr/src/c9sdk && \
+    scripts/install-sdk.sh
     
 ENV PATH=$PATH:/usr/src/caffe/build/tools/
 
