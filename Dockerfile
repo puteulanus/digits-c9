@@ -48,7 +48,7 @@ RUN pip install jupyter
 # Ngrok
 RUN curl -O https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-darwin-amd64.zip && \
     unzip ngrok-stable-darwin-amd64.zip -d /usr/local/bin && \
-    rm -f ngrok.zip
+    rm -f ngrok-stable-darwin-amd64.zip
      
 # Entrypoint
 RUN echo '#!/bin/bash' > /root/run && \
