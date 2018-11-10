@@ -9,4 +9,3 @@ before_install:
 script:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - docker push puteulanus/digits-notebook
-  - curl -X POST "https://hooks.microbadger.com/images/puteulanus/digits-notebook/$MICROBADGER_WEBHOOK_KEY"
