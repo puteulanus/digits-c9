@@ -21,6 +21,8 @@ RUN apt-get install -y --no-install-recommends build-essential cmake git gfortra
     python-all-dev python-dev python-h5py python-matplotlib python-numpy python-opencv python-pil \
     python-pip python-pydot python-scipy python-skimage python-sklearn && \
     git clone https://github.com/NVIDIA/caffe.git /usr/src/caffe -b 'caffe-0.15' && \
+    pip install -U pip && \
+    pip install wheel && \
     pip install -r /usr/src/caffe/python/requirements.txt && \
     cd /usr/src/caffe && \
     mkdir build && \
@@ -41,6 +43,15 @@ RUN apt-get install -y tmux && \
     cd /usr/src/c9sdk && \
     scripts/install-sdk.sh
     
-ENV PATH=$PATH:/usr/src/caffe/build/tools/
+ENV CAFFE_ROOT=/usr/src/caffe/
 
-CMD /root/digits/digits-devserver
+ENV C9_USERNAME ""
+ENV C9_PASSWORD ""
+ENV C9_PORT 8080
+ENV WORKSPACE_DIR /root/digits/
+
+EXPOSE 8080
+EXPOSE 5000
+
+CMD /root/.c9/node/bin/node server.js -p $C9_PORT -w $WORKSPACE_DIR -a $USERNAME:$PASSWORD --packed && \
+    ./digits-devserver
