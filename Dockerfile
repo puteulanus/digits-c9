@@ -3,7 +3,7 @@ FROM nvidia/cuda:9.0-base
 RUN apt-get update
 
 # Cloud9
-RUN apt-get install -y tmux git && \
+RUN apt-get install -y tmux git wget && \
     git clone https://github.com/c9/core.git /usr/src/c9sdk && \
     cd /usr/src/c9sdk && \
     scripts/install-sdk.sh
