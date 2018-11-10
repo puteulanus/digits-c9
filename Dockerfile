@@ -46,23 +46,13 @@ RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
 RUN pip install jupyter
 
 # Ngrok
-RUN curl -O https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-darwin-amd64.zip && \
-    unzip ngrok-stable-darwin-amd64.zip -d /usr/bin && \
-    rm -f ngrok-stable-darwin-amd64.zip
-     
-# Entrypoint
-RUN echo '#!/bin/bash' > /root/run && \
-    echo './digits-devserver | tee /var/log/digits.log &' >> /root/run && \
-    echo 'ngrok http 5000 --log "stdout" | tee /var/log/ngrok.log &' >> /root/run && \
-    echo 'jupyter notebook --ip=0.0.0.0 --allow-root' >> /root/run && \
-    chmod +x /root/run
+RUN curl -O https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.deb && \
+    dpkg -i ngrok-stable-linux-amd64.deb && \
+    rm -f ngrok-stable-linux-amd64.deb
     
 ENV CAFFE_ROOT=/usr/src/caffe/
 ENV WORKSPACE_DIR /root/digits/
 
 WORKDIR /root/digits/
 
-EXPOSE 8080
 EXPOSE 5000
-
-CMD /root/run
