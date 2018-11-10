@@ -1,4 +1,4 @@
-FROM nvidia/cuda:8.0-cudnn7-devel-ubuntu16.04
+FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
 
 RUN apt-get update
 
@@ -35,7 +35,13 @@ RUN apt-get install -y --no-install-recommends git graphviz python-dev python-fl
       python-gevent python-h5py python-numpy python-pil python-pip python-scipy python-tk && \
     git clone https://github.com/NVIDIA/DIGITS.git /root/digits && \
     pip install -r /root/digits/requirements.txt
-    
+
+# TensorFlow
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
+    python get-pip.py --force-reinstall && \
+    rm -f get-pip.py && \
+    pip install tensorflow-gpu==1.2.1
+
 # Cloud9
 RUN apt-get install -y tmux && \
     git clone https://github.com/c9/core.git /usr/src/c9sdk && \
