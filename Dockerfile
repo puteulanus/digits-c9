@@ -46,10 +46,9 @@ RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
 RUN pip install jupyter
 
 # Ngrok
-RUN wget -O ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip && \
-     unzip ngrok.zip && \
-     mv ngrok /usr/bin/ && \
-     rm -f ngrok.zip
+RUN curl -O https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-darwin-amd64.zip && \
+    unzip ngrok-stable-darwin-amd64.zip -d /usr/local/bin && \
+    rm -f ngrok.zip
      
 # Entrypoint
 RUN echo '#!/bin/bash' > /root/run && \
