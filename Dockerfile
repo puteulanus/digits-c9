@@ -64,5 +64,5 @@ EXPOSE 8080
 EXPOSE 5000
 
 CMD bash -c 'echo -e "./digits-devserver | tee /var/log/digits.log & \\n jupyter notebook" \
-    "--ip=0.0.0.0 --allow-root & \\n /root/.c9/node/bin/node /usr/src/c9sdk/server.js"
+    "--ip=0.0.0.0 --allow-root & \\n /root/.c9/node/bin/node /usr/src/c9sdk/server.js" \
     "-p $C9_PORT -w $WORKSPACE_DIR -a $USERNAME:$PASSWORD -l 0.0.0.0 --packed >/dev/null 2>&1" | bash'
