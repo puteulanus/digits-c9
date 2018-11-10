@@ -49,8 +49,10 @@ ENV C9_PASSWORD ""
 ENV C9_PORT 8080
 ENV WORKSPACE_DIR /root/digits/
 
+WORKDIR /root/digits/
+
 EXPOSE 8080
 EXPOSE 5000
 
-CMD echo -e "./digits-devserver & \n/root/.c9/node/bin/node /usr/src/c9sdk/server.js --packed" \
-    "-p $C9_PORT -w $WORKSPACE_DIR -a $USERNAME:$PASSWORD" | bash
+CMD bash -c 'echo -e "./digits-devserver & \\n/root/.c9/node/bin/node /usr/src/c9sdk/server.js -l 0.0.0.0 --packed" \
+    "-p $C9_PORT -w $WORKSPACE_DIR -a $USERNAME:$PASSWORD" | bash'
