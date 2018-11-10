@@ -4,7 +4,7 @@ services:
   - docker
 
 before_install:
-- docker build -t puteulanus/browser-docker .
+- docker build -t puteulanus/digits-c9 .
 
 script:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
