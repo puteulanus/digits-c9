@@ -4,9 +4,9 @@ services:
   - docker
 
 before_install:
-- docker build -t puteulanus/digits-c9 .
+- docker build -t puteulanus/digits-notebook .
 
 script:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker push puteulanus/digits-c9
-  - curl -X POST "https://hooks.microbadger.com/images/puteulanus/digits-c9/$MICROBADGER_WEBHOOK_KEY"
+  - docker push puteulanus/digits-notebook
+  - curl -X POST "https://hooks.microbadger.com/images/puteulanus/digits-notebook/$MICROBADGER_WEBHOOK_KEY"
