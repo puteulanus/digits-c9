@@ -54,5 +54,5 @@ WORKDIR /root/digits/
 EXPOSE 8080
 EXPOSE 5000
 
-CMD bash -c 'echo -e "./digits-devserver & \\n/root/.c9/node/bin/node /usr/src/c9sdk/server.js -l 0.0.0.0 --packed" \
-    "-p $C9_PORT -w $WORKSPACE_DIR -a $USERNAME:$PASSWORD" | bash'
+CMD bash -c 'echo -e "./digits-devserver | tee /var/log/digits.log & \\n/root/.c9/node/bin/node /usr/src/c9sdk/server.js" \
+    "-p $C9_PORT -w $WORKSPACE_DIR -a $USERNAME:$PASSWORD -l 0.0.0.0 --packed >/dev/null 2>&1" | bash'
