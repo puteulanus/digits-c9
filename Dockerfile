@@ -41,21 +41,24 @@ RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
     python get-pip.py --force-reinstall && \
     rm -f get-pip.py && \
     pip install tensorflow-gpu==1.2.1
-
-# Cloud9
-RUN apt-get install -y tmux && \
-    git clone https://github.com/c9/core.git /usr/src/c9sdk && \
-    cd /usr/src/c9sdk && \
-    scripts/install-sdk.sh
     
 # Jupyter
 RUN pip install jupyter
+
+# Ngrok
+RUN wget -O ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip && \
+     unzip ngrok.zip && \
+     mv ngrok /usr/bin/ && \
+     rm -f ngrok.zip
+     
+# Entrypoint
+RUN echo '#!/bin/bash' > /root/run && \
+    echo './digits-devserver | tee /var/log/digits.log &' >> /root/run && \
+    echo 'ngrok http 5000 --log "stdout" | tee /var/log/ngrok.log &' >> /root/run && \
+    echo 'jupyter notebook --ip=0.0.0.0 --allow-root' >> /root/run && \
+    chmod +x /root/run
     
 ENV CAFFE_ROOT=/usr/src/caffe/
-
-ENV C9_USERNAME ""
-ENV C9_PASSWORD ""
-ENV C9_PORT 8080
 ENV WORKSPACE_DIR /root/digits/
 
 WORKDIR /root/digits/
@@ -63,6 +66,4 @@ WORKDIR /root/digits/
 EXPOSE 8080
 EXPOSE 5000
 
-CMD bash -c 'echo -e "./digits-devserver | tee /var/log/digits.log & \\n jupyter notebook" \
-    "--ip=0.0.0.0 --allow-root & \\n /root/.c9/node/bin/node /usr/src/c9sdk/server.js" \
-    "-p $C9_PORT -w $WORKSPACE_DIR -a $USERNAME:$PASSWORD -l 0.0.0.0 --packed >/dev/null 2>&1" | bash'
+CMD /root/run
