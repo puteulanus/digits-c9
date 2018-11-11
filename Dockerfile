@@ -3,7 +3,8 @@ FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
 RUN apt-get update
 
 # Protobuf3
-RUN apt-get install -y --no-install-recommends autoconf automake libtool curl make g++ git python-dev python-setuptools unzip && \
+RUN apt-get install -y --no-install-recommends autoconf automake libtool curl make g++ git \
+        python-dev python-setuptools unzip && \
     git clone https://github.com/google/protobuf.git /usr/src/protobuf -b '3.2.x' && \
     cd /usr/src/protobuf && \
     ./autogen.sh && \
@@ -43,6 +44,9 @@ RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
     rm -f get-pip.py && \
     pip install tensorflow-gpu==1.2.1
     
+# Jupyter
+RUN pip install jupyterlab
+    
 # Torch
 RUN apt-get install -y --no-install-recommends git sudo software-properties-common libhdf5-serial-dev liblmdb-dev && \
     git clone https://github.com/torch/distro.git /usr/src/torch --recursive && \
@@ -55,9 +59,6 @@ RUN apt-get install -y --no-install-recommends git sudo software-properties-comm
     luarocks install "https://raw.github.com/Neopallium/lua-pb/master/lua-pb-scm-0.rockspec" && \
     luarocks install lightningmdb 0.9.18.1-1 LMDB_INCDIR=/usr/include LMDB_LIBDIR=/usr/lib/x86_64-linux-gnu && \
     luarocks install "https://raw.githubusercontent.com/ngimel/nccl.torch/master/nccl-scm-1.rockspec"
-    
-# Jupyter
-RUN pip install jupyterlab
 
 # Ngrok
 RUN curl -O https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.deb && \
