@@ -54,6 +54,7 @@ RUN curl -O https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.deb &&
 RUN echo '#!/bin/bash' > /root/run && \
     echo 'cd /root/digits/' >> /root/run && \
     echo './digits-devserver | tee /var/log/digits.log &' >> /root/run && \
+    echo 'mkdir -p /notebooks' >> /root/run && \
     echo 'cd /notebooks' >> /root/run && \
     echo 'jupyter lab --ip=0.0.0.0 --allow-root' >> /root/run && \
     chmod +x /root/run
