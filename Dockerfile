@@ -56,3 +56,5 @@ ENV WORKSPACE_DIR /root/digits/
 WORKDIR /root/digits/
 
 EXPOSE 5000
+
+CMD jupyter notebook --ip=0.0.0.0 --allow-root
