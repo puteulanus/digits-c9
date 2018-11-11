@@ -17,16 +17,17 @@ RUN apt-get install -y autoconf automake libtool curl make g++ git python-dev py
 # NVcaffe
 RUN apt-get install -y --no-install-recommends build-essential cmake git gfortran libatlas-base-dev \
       libboost-filesystem-dev libboost-python-dev libboost-system-dev libboost-thread-dev libgflags-dev \
-      libgoogle-glog-dev libhdf5-serial-dev libleveldb-dev liblmdb-dev libopencv-dev libsnappy-dev doxygen \
-    python-all-dev python-dev python-h5py python-matplotlib python-numpy python-opencv python-pil \
-    python-pip python-pydot python-scipy python-skimage python-sklearn && \
+      libgoogle-glog-dev libhdf5-serial-dev libleveldb-dev liblmdb-dev libopencv-dev libsnappy-dev \
+      python-all-dev python-dev python-h5py python-matplotlib python-numpy python-opencv python-pil \
+      python-pip python-pydot python-scipy python-skimage python-sklearn \
+      doxygen libnccl2=*+cuda8.0 libnccl-dev=*+cuda8.0 && \
     git clone https://github.com/NVIDIA/caffe.git /usr/src/caffe -b 'caffe-0.15' && \
     pip install wheel && \
     pip install -r /usr/src/caffe/python/requirements.txt && \
     cd /usr/src/caffe && \
     mkdir build && \
     cd build && \
-    cmake .. && \
+    cmake .. -DCUDA_NVCC_FLAGS=--Wno-deprecated-gpu-targets && \
     make -j"$(nproc)" && \
     make install
 
@@ -49,6 +50,10 @@ RUN pip install jupyterlab
 RUN curl -O https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.deb && \
     dpkg -i ngrok-stable-linux-amd64.deb && \
     rm -f ngrok-stable-linux-amd64.deb
+    
+# Oh My Zsh
+RUN apt-get install -y zsh && \
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
 # Entrypoint
 RUN echo '#!/bin/bash' > /root/run && \
@@ -61,6 +66,7 @@ RUN echo '#!/bin/bash' > /root/run && \
     
 ENV CAFFE_ROOT=/usr/src/caffe/
 ENV WORKSPACE_DIR /root/digits/
+ENV SHELL=/usr/bin/zsh
 
 WORKDIR /root/digits/
 
