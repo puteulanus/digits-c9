@@ -17,7 +17,7 @@ RUN apt-get install -y autoconf automake libtool curl make g++ git python-dev py
 # NVcaffe
 RUN apt-get install -y --no-install-recommends build-essential cmake git gfortran libatlas-base-dev \
       libboost-filesystem-dev libboost-python-dev libboost-system-dev libboost-thread-dev libgflags-dev \
-      libgoogle-glog-dev libhdf5-serial-dev libleveldb-dev liblmdb-dev libopencv-dev libsnappy-dev \
+      libgoogle-glog-dev libhdf5-serial-dev libleveldb-dev liblmdb-dev libopencv-dev libsnappy-dev doxygen \
     python-all-dev python-dev python-h5py python-matplotlib python-numpy python-opencv python-pil \
     python-pip python-pydot python-scipy python-skimage python-sklearn && \
     git clone https://github.com/NVIDIA/caffe.git /usr/src/caffe -b 'caffe-0.15' && \
@@ -43,7 +43,7 @@ RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
     pip install tensorflow-gpu==1.2.1
     
 # Jupyter
-RUN pip install jupyter jupyterlab
+RUN pip install jupyterlab
 
 # Ngrok
 RUN curl -O https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.deb && \
