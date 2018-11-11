@@ -49,6 +49,13 @@ RUN pip install jupyter
 RUN curl -O https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.deb && \
     dpkg -i ngrok-stable-linux-amd64.deb && \
     rm -f ngrok-stable-linux-amd64.deb
+
+# Entrypoint
+RUN echo '#!/bin/bash' > /root/run && \
+    echo 'cd /root/digits/' >> /root/run && \
+    echo './digits-devserver | tee /var/log/digits.log &' >> /root/run && \
+    echo 'jupyter notebook --ip=0.0.0.0 --allow-root' >> /root/run && \
+    chmod +x /root/run
     
 ENV CAFFE_ROOT=/usr/src/caffe/
 ENV WORKSPACE_DIR /root/digits/
@@ -57,4 +64,4 @@ WORKDIR /root/digits/
 
 EXPOSE 5000
 
-CMD jupyter notebook --ip=0.0.0.0 --allow-root
+CMD /root/run
