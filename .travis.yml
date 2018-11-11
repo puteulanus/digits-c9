@@ -8,4 +8,4 @@ before_install:
 
 script:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-- docker push puteulanus/digits-notebook:lite
+  - docker push puteulanus/digits-notebook:lite
