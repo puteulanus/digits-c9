@@ -31,7 +31,7 @@ RUN apt-get install -y --no-install-recommends build-essential cmake git gfortra
     make -j"$(nproc)" && \
     make install
 
-# Digits
+# DIGITS
 RUN apt-get install -y --no-install-recommends git graphviz python-dev python-flask python-flaskext.wtf \
       python-gevent python-h5py python-numpy python-pil python-pip python-scipy python-tk && \
     git clone https://github.com/NVIDIA/DIGITS.git /root/digits && \
@@ -49,7 +49,7 @@ RUN apt-get install -y --no-install-recommends git sudo software-properties-comm
     cd /usr/src/torch && \
     ./install-deps && \
     ./install.sh -b && \
-    install/bin/torch-activate && \
+    source ~/.bashrc && \
     luarocks install tds && \
     luarocks install "https://raw.github.com/deepmind/torch-hdf5/master/hdf5-0-0.rockspec" && \
     luarocks install "https://raw.github.com/Neopallium/lua-pb/master/lua-pb-scm-0.rockspec" && \
@@ -71,7 +71,7 @@ RUN apt-get install -y --no-install-recommends zsh && \
 # Entrypoint
 RUN echo '#!/bin/bash' > /root/run && \
     echo 'cd /root/digits/' >> /root/run && \
-    echo '/usr/src/torch/install/bin/torch-activate' >> /root/run && \
+    echo 'source /root/.bashrc' >> /root/run && \
     echo './digits-devserver 2>&1 | tee /var/log/digits.log &' >> /root/run && \
     echo 'mkdir -p /notebooks' >> /root/run && \
     echo 'cd /notebooks' >> /root/run && \
