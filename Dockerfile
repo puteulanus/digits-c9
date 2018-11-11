@@ -3,7 +3,7 @@ FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
 RUN apt-get update
 
 # Protobuf3
-RUN apt-get install -y autoconf automake libtool curl make g++ git python-dev python-setuptools unzip && \
+RUN apt-get install -y --no-install-recommends autoconf automake libtool curl make g++ git python-dev python-setuptools unzip && \
     git clone https://github.com/google/protobuf.git /usr/src/protobuf -b '3.2.x' && \
     cd /usr/src/protobuf && \
     ./autogen.sh && \
@@ -43,6 +43,19 @@ RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
     rm -f get-pip.py && \
     pip install tensorflow-gpu==1.2.1
     
+# Torch
+RUN apt-get install -y --no-install-recommends git sudo software-properties-common libhdf5-serial-dev liblmdb-dev && \
+    git clone https://github.com/torch/distro.git /usr/src/torch --recursive && \
+    cd /usr/src/torch && \
+    ./install-deps && \
+    ./install.sh -b && \
+    install/bin/torch-activate && \
+    luarocks install tds && \
+    luarocks install "https://raw.github.com/deepmind/torch-hdf5/master/hdf5-0-0.rockspec" && \
+    luarocks install "https://raw.github.com/Neopallium/lua-pb/master/lua-pb-scm-0.rockspec" && \
+    luarocks install lightningmdb 0.9.18.1-1 LMDB_INCDIR=/usr/include LMDB_LIBDIR=/usr/lib/x86_64-linux-gnu && \
+    luarocks install "https://raw.githubusercontent.com/ngimel/nccl.torch/master/nccl-scm-1.rockspec"
+    
 # Jupyter
 RUN pip install jupyterlab
 
@@ -52,23 +65,25 @@ RUN curl -O https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.deb &&
     rm -f ngrok-stable-linux-amd64.deb
     
 # Oh My Zsh
-RUN apt-get install -y zsh && \
+RUN apt-get install -y --no-install-recommends zsh && \
     curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | zsh || true
 
 # Entrypoint
 RUN echo '#!/bin/bash' > /root/run && \
     echo 'cd /root/digits/' >> /root/run && \
-    echo './digits-devserver | tee /var/log/digits.log &' >> /root/run && \
+    echo '/usr/src/torch/install/bin/torch-activate' >> /root/run && \
+    echo './digits-devserver 2>&1 | tee /var/log/digits.log &' >> /root/run && \
     echo 'mkdir -p /notebooks' >> /root/run && \
     echo 'cd /notebooks' >> /root/run && \
-    echo 'jupyter lab --ip=0.0.0.0 --allow-root' >> /root/run && \
+    echo 'jupyter lab --ip=0.0.0.0 --allow-root --no-browser' >> /root/run && \
     chmod +x /root/run
     
-ENV CAFFE_ROOT=/usr/src/caffe/
-ENV WORKSPACE_DIR /root/digits/
+ENV CAFFE_ROOT=/usr/src/caffe
+ENV TORCH_ROOT=/usr/src/torch
+ENV WORKSPACE_DIR /root/digits
 ENV SHELL=/usr/bin/zsh
 
-WORKDIR /root/digits/
+WORKDIR /root/digits
 
 EXPOSE 5000
 
