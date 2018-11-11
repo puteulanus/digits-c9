@@ -43,19 +43,6 @@ RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
     rm -f get-pip.py && \
     pip install tensorflow-gpu==1.2.1
     
-# Torch
-RUN apt-get install -y --no-install-recommends git sudo software-properties-common libhdf5-serial-dev liblmdb-dev && \
-    git clone https://github.com/torch/distro.git /usr/src/torch --recursive && \
-    cd /usr/src/torch && \
-    ./install-deps && \
-    ./install.sh -b && \
-    source ~/.bashrc && \
-    luarocks install tds && \
-    luarocks install "https://raw.github.com/deepmind/torch-hdf5/master/hdf5-0-0.rockspec" && \
-    luarocks install "https://raw.github.com/Neopallium/lua-pb/master/lua-pb-scm-0.rockspec" && \
-    luarocks install lightningmdb 0.9.18.1-1 LMDB_INCDIR=/usr/include LMDB_LIBDIR=/usr/lib/x86_64-linux-gnu && \
-    luarocks install "https://raw.githubusercontent.com/ngimel/nccl.torch/master/nccl-scm-1.rockspec"
-    
 # Jupyter
 RUN pip install jupyterlab
 
@@ -71,7 +58,6 @@ RUN apt-get install -y --no-install-recommends zsh && \
 # Entrypoint
 RUN echo '#!/bin/bash' > /root/run && \
     echo 'cd /root/digits/' >> /root/run && \
-    echo 'source /root/.bashrc' >> /root/run && \
     echo './digits-devserver 2>&1 | tee /var/log/digits.log &' >> /root/run && \
     echo 'mkdir -p /notebooks' >> /root/run && \
     echo 'cd /notebooks' >> /root/run && \
