@@ -43,7 +43,7 @@ RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
     pip install tensorflow-gpu==1.2.1
     
 # Jupyter
-RUN pip install jupyter
+RUN pip install jupyter jupyterlab
 
 # Ngrok
 RUN curl -O https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.deb && \
@@ -54,7 +54,8 @@ RUN curl -O https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.deb &&
 RUN echo '#!/bin/bash' > /root/run && \
     echo 'cd /root/digits/' >> /root/run && \
     echo './digits-devserver | tee /var/log/digits.log &' >> /root/run && \
-    echo 'jupyter notebook --ip=0.0.0.0 --allow-root' >> /root/run && \
+    echo 'cd /notebooks' >> /root/run && \
+    echo 'jupyter lab --ip=0.0.0.0 --allow-root' >> /root/run && \
     chmod +x /root/run
     
 ENV CAFFE_ROOT=/usr/src/caffe/
