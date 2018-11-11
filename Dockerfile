@@ -53,7 +53,7 @@ RUN curl -O https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.deb &&
     
 # Oh My Zsh
 RUN apt-get install -y zsh && \
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | zsh || true
 
 # Entrypoint
 RUN echo '#!/bin/bash' > /root/run && \
