@@ -15,6 +15,14 @@ RUN apt-get install -y --no-install-recommends autoconf automake libtool curl ma
     cd python && \
     python setup.py install --cpp_implementation
     
+# MKL
+RUN curl -O https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB && \
+    apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB && \
+    rm -f GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB && \
+    echo deb https://apt.repos.intel.com/mkl all main > /etc/apt/sources.list.d/intel-mkl.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends intel-mkl-2019.1-053
+    
 # NVcaffe
 RUN apt-get install -y --no-install-recommends build-essential cmake git gfortran libatlas-base-dev \
       libboost-filesystem-dev libboost-python-dev libboost-system-dev libboost-thread-dev libgflags-dev \
@@ -28,6 +36,7 @@ RUN apt-get install -y --no-install-recommends build-essential cmake git gfortra
     cd /usr/src/caffe && \
     mkdir build && \
     cd build && \
+    export BLAS=mkl && \
     cmake .. -DCUDA_NVCC_FLAGS=--Wno-deprecated-gpu-targets && \
     make -j"$(nproc)" && \
     make install
@@ -46,13 +55,6 @@ RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
     
 # Jupyter
 RUN pip install jupyterlab
-
-# OpenBLAS
-RUN apt-get install -y --no-install-recommends gfortran && \
-    git clone git://github.com/xianyi/OpenBLAS /usr/src/openblas && \
-    cd /usr/src/openblas && \
-    make -j"$(nproc)" FC=gfortran && \
-    make install PREFIX=/opt/openblas
     
 # MAGMA
 RUN cd /usr/src && \
@@ -60,8 +62,8 @@ RUN cd /usr/src && \
     tar zxf magma-2.4.0.tar.gz && \
     rm -f magma-2.4.0.tar.gz && \
     cd magma-2.4.0 && \
-    cp make.inc-examples/make.inc.openblas ./make.inc && \
-    export OPENBLASDIR=/opt/openblas && \
+    cp make.inc-examples/make.inc.mkl-gcc-ilp64 ./make.inc && \
+    export MKLROOT=/opt/intel/mkl && \
     export CUDADIR=/usr/local/cuda && \
     make -j"$(nproc)" && \
     make install
