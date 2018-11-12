@@ -24,7 +24,7 @@ RUN curl -O https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PROD
     apt-get install -y --no-install-recommends intel-mkl-2019.1-053
     
 # NVcaffe
-RUN apt-get install -y --no-install-recommends build-essential cmake git gfortran libatlas-base-dev \
+RUN apt-get install -y --no-install-recommends build-essential cmake git gfortran \
       libboost-filesystem-dev libboost-python-dev libboost-system-dev libboost-thread-dev libgflags-dev \
       libgoogle-glog-dev libhdf5-serial-dev libleveldb-dev liblmdb-dev libopencv-dev libsnappy-dev \
       python-all-dev python-dev python-h5py python-matplotlib python-numpy python-opencv python-pil \
@@ -36,7 +36,6 @@ RUN apt-get install -y --no-install-recommends build-essential cmake git gfortra
     cd /usr/src/caffe && \
     mkdir build && \
     cd build && \
-    echo 'BLAS := mkl' >> Makefile.config && \
     cmake .. -DCUDA_NVCC_FLAGS=--Wno-deprecated-gpu-targets && \
     make -j"$(nproc)" && \
     make install
