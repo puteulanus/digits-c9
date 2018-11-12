@@ -52,8 +52,7 @@ RUN apt-get install -y --no-install-recommends gfortran && \
     git clone git://github.com/xianyi/OpenBLAS /usr/src/openblas && \
     cd /usr/src/openblas && \
     make -j"$(nproc)" FC=gfortran && \
-    make  && \
-    make PREFIX=/opt/openblas install
+    make install PREFIX=/opt/openblas
     
 # MAGMA
 RUN cd /usr/src && \
