@@ -46,7 +46,27 @@ RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
     
 # Jupyter
 RUN pip install jupyterlab
+
+# OpenBLAS
+RUN apt-get install -y --no-install-recommends gfortran && \
+    git clone git://github.com/xianyi/OpenBLAS /usr/src/openblas && \
+    cd /usr/src/openblas && \
+    make -j"$(nproc)" FC=gfortran && \
+    make  && \
+    make PREFIX=/opt/openblas install
     
+# MAGMA
+RUN cd /usr/src && \
+    curl -O http://icl.utk.edu/projectsfiles/magma/downloads/magma-2.4.0.tar.gz && \
+    tar zxf magma-2.4.0.tar.gz && \
+    rm -f magma-2.4.0.tar.gz && \
+    cd magma-2.4.0 && \
+    cp make.inc-examples/make.inc.openblas ./make.inc && \
+    export OPENBLASDIR=/opt/openblas && \
+    export CUDADIR=/usr/local/cuda && \
+    make -j"$(nproc)" && \
+    make install
+
 # Torch
 RUN apt-get install -y --no-install-recommends git sudo software-properties-common libhdf5-serial-dev liblmdb-dev && \
     git clone https://github.com/torch/distro.git /usr/src/torch --recursive && \
