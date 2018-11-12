@@ -3,7 +3,8 @@ FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
 RUN apt-get update && apt-get install -y libsystemd-dev
 
 # Protobuf3
-RUN apt-get install -y --no-install-recommends autoconf automake libtool curl make g++ git python-dev python-setuptools unzip && \
+RUN apt-get install -y --no-install-recommends autoconf automake libtool curl make g++ git \
+        python-dev python-setuptools unzip && \
     git clone https://github.com/google/protobuf.git /usr/src/protobuf -b '3.2.x' && \
     cd /usr/src/protobuf && \
     ./autogen.sh && \
@@ -46,6 +47,38 @@ RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
 # Jupyter
 RUN pip install jupyterlab
 
+# OpenBLAS
+RUN apt-get install -y --no-install-recommends gfortran && \
+    git clone git://github.com/xianyi/OpenBLAS /usr/src/openblas && \
+    cd /usr/src/openblas && \
+    make -j"$(nproc)" FC=gfortran && \
+    make install PREFIX=/opt/openblas
+    
+# MAGMA
+RUN cd /usr/src && \
+    curl -O http://icl.utk.edu/projectsfiles/magma/downloads/magma-2.4.0.tar.gz && \
+    tar zxf magma-2.4.0.tar.gz && \
+    rm -f magma-2.4.0.tar.gz && \
+    cd magma-2.4.0 && \
+    cp make.inc-examples/make.inc.openblas ./make.inc && \
+    export OPENBLASDIR=/opt/openblas && \
+    export CUDADIR=/usr/local/cuda && \
+    make -j"$(nproc)" && \
+    make install
+
+# Torch
+RUN apt-get install -y --no-install-recommends git sudo software-properties-common libhdf5-serial-dev liblmdb-dev && \
+    git clone https://github.com/torch/distro.git /usr/src/torch --recursive && \
+    cd /usr/src/torch && \
+    ./install-deps && \
+    ./install.sh -b && \
+    . /usr/src/torch/install/bin/torch-activate && \
+    luarocks install tds && \
+    luarocks install "https://raw.github.com/deepmind/torch-hdf5/master/hdf5-0-0.rockspec" && \
+    luarocks install "https://raw.github.com/Neopallium/lua-pb/master/lua-pb-scm-0.rockspec" && \
+    luarocks install lightningmdb 0.9.18.1-1 LMDB_INCDIR=/usr/include LMDB_LIBDIR=/usr/lib/x86_64-linux-gnu && \
+    luarocks install "https://raw.githubusercontent.com/ngimel/nccl.torch/master/nccl-scm-1.rockspec"
+
 # Ngrok
 RUN curl -O https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.deb && \
     dpkg -i ngrok-stable-linux-amd64.deb && \
@@ -58,6 +91,7 @@ RUN apt-get install -y --no-install-recommends zsh && \
 # Entrypoint
 RUN echo '#!/bin/bash' > /root/run && \
     echo 'cd /root/digits/' >> /root/run && \
+    echo '. /usr/src/torch/install/bin/torch-activate' >> /root/run && \
     echo './digits-devserver 2>&1 | tee /var/log/digits.log &' >> /root/run && \
     echo 'mkdir -p /notebooks' >> /root/run && \
     echo 'cd /notebooks' >> /root/run && \
