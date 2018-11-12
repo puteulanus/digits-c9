@@ -36,7 +36,7 @@ RUN apt-get install -y --no-install-recommends build-essential cmake git gfortra
     cd /usr/src/caffe && \
     mkdir build && \
     cd build && \
-    sed sed -i 's/BLAS ?= atlas/BLAS ?= mkl/' Makefile && \
+    echo 'BLAS := mkl' >> Makefile.config && \
     cmake .. -DCUDA_NVCC_FLAGS=--Wno-deprecated-gpu-targets && \
     make -j"$(nproc)" && \
     make install
