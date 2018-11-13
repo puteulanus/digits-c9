@@ -15,7 +15,8 @@ RUN apt-get install -y --no-install-recommends autoconf automake libtool curl ma
     make install && \
     ldconfig && \
     cd python && \
-    python setup.py install --cpp_implementation
+    python setup.py install --cpp_implementation && \
+    rm -rf /usr/src/protobuf
     
 # MKL
 RUN curl -O https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB && \
@@ -72,7 +73,8 @@ RUN cd /usr/src && \
     export MKLROOT=/opt/intel/mkl && \
     export CUDADIR=/usr/local/cuda && \
     make -j"$(nproc)" && \
-    make install
+    make install && \
+    rm -rf /usr/src/magma-2.4.0
 
 # Torch
 RUN apt-get install -y --no-install-recommends git sudo software-properties-common libhdf5-serial-dev liblmdb-dev && \
