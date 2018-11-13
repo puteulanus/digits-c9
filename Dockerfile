@@ -1,5 +1,7 @@
 FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
 
+SHELL ["/bin/bash", "-c"]
+
 RUN apt-get update && apt-get install -y libsystemd-dev
 
 # Protobuf3
