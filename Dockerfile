@@ -23,6 +23,10 @@ RUN curl -O https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PROD
     apt-get update && \
     apt-get install -y --no-install-recommends intel-mkl-2019.1-053
     
+ENV MKL_ROOT=/opt/intel/mkl
+ENV MKL_INCLUDE=$MKL_ROOT/include
+ENV MKL_LIBRARY=$MKL_ROOT/lib/intel64
+    
 # NVcaffe
 RUN apt-get install -y --no-install-recommends build-essential cmake git gfortran \
       libboost-filesystem-dev libboost-python-dev libboost-system-dev libboost-thread-dev libgflags-dev \
@@ -61,7 +65,7 @@ RUN cd /usr/src && \
     tar zxf magma-2.4.0.tar.gz && \
     rm -f magma-2.4.0.tar.gz && \
     cd magma-2.4.0 && \
-    cp make.inc-examples/make.inc.mkl-gcc-ilp64 ./make.inc && \
+    cp make.inc-examples/make.inc.mkl-gcc ./make.inc && \
     export MKLROOT=/opt/intel/mkl && \
     export CUDADIR=/usr/local/cuda && \
     make -j"$(nproc)" && \
@@ -71,6 +75,10 @@ RUN cd /usr/src && \
 RUN apt-get install -y --no-install-recommends git sudo software-properties-common libhdf5-serial-dev liblmdb-dev && \
     git clone https://github.com/torch/distro.git /usr/src/torch --recursive && \
     cd /usr/src/torch && \
+    . /opt/intel/mkl/bin/mklvars.sh intel64 && \
+    . /opt/intel/bin/compilervars.sh intel64 && \
+    export CMAKE_INCLUDE_PATH=$MKL_INCLUDE:$CMAKE_INCLUDE_PATH && \
+    export CMAKE_LIBRARY_PATH=$MKL_LIBRARY:$CMAKE_LIBRARY_PATH && \
     ./install-deps && \
     ./install.sh -b && \
     . /usr/src/torch/install/bin/torch-activate && \
