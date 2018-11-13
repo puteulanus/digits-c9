@@ -23,7 +23,8 @@ RUN curl -O https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PROD
     rm -f GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB && \
     echo deb https://apt.repos.intel.com/mkl all main > /etc/apt/sources.list.d/intel-mkl.list && \
     apt-get update && \
-    apt-get install -y --no-install-recommends intel-mkl-2019.1-053
+    apt-get install -y --no-install-recommends intel-mkl-2019.1-053 && \
+    ln -s '/opt/intel/compilers_and_libraries_2019.1.144/linux/compiler/lib/intel64_lin/libiomp5.so' /lib/libiomp5.so
     
 ENV MKL_ROOT=/opt/intel/mkl
 ENV MKL_INCLUDE=$MKL_ROOT/include
