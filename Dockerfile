@@ -70,9 +70,10 @@ RUN cd /usr/src && \
     rm -f magma-2.4.0.tar.gz && \
     cd magma-2.4.0 && \
     cp make.inc-examples/make.inc.mkl-gcc ./make.inc && \
+    echo 'GPU_TARGET := Kepler Maxwell Pascal Volta' >> make.inc && \
     export MKLROOT=/opt/intel/mkl && \
     export CUDADIR=/usr/local/cuda && \
-    make -j"$(nproc)" -DGPU_TARGET="Kepler Maxwell Pascal Volta" && \
+    make -j"$(nproc)" && \
     make install && \
     rm -rf /usr/src/magma-2.4.0
 
