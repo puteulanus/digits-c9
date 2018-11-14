@@ -38,6 +38,9 @@ RUN apt-get install -y --no-install-recommends build-essential cmake git gfortra
       python-all-dev python-dev python-h5py python-matplotlib python-numpy python-opencv python-pil \
       python-pip python-pydot python-scipy python-skimage python-sklearn libturbojpeg \
       doxygen libnccl2 libnccl-dev && \
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
+    python get-pip.py --force-reinstall && \
+    rm -f get-pip.py && \
     ln -s /usr/lib/x86_64-linux-gnu/libturbojpeg.so.0.1.0 /usr/lib/x86_64-linux-gnu/libturbojpeg.so && \
     git clone https://github.com/NVIDIA/caffe.git /usr/src/caffe -b 'v0.17.2' && \
     pip install wheel && \
@@ -56,10 +59,7 @@ RUN apt-get install -y --no-install-recommends git graphviz python-dev python-fl
     pip install -r /root/digits/requirements.txt
 
 # TensorFlow
-RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-    python get-pip.py --force-reinstall && \
-    rm -f get-pip.py && \
-    pip install tensorflow-gpu
+RUN pip install tensorflow-gpu
     
 # Jupyter
 RUN pip install jupyterlab
