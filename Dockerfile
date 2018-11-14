@@ -32,8 +32,8 @@ ENV MKL_INCLUDE=$MKL_ROOT/include
 ENV MKL_LIBRARY=$MKL_ROOT/lib/intel64
     
 # NVcaffe
-RUN apt-get install -y --no-install-recommends build-essential cmake git gfortran \
-      libboost-filesystem-dev libboost-python-dev libboost-system-dev libboost-thread-dev libgflags-dev \
+RUN apt-get install -y --no-install-recommends build-essential cmake git gfortran libgflags-dev \
+      libboost-filesystem-dev libboost-python-dev libboost-system-dev libboost-thread-dev libboost-regex-dev \
       libgoogle-glog-dev libhdf5-serial-dev libleveldb-dev liblmdb-dev libopencv-dev libsnappy-dev \
       python-all-dev python-dev python-h5py python-matplotlib python-numpy python-opencv python-pil \
       python-pip python-pydot python-scipy python-skimage python-sklearn libturbojpeg \
@@ -43,7 +43,6 @@ RUN apt-get install -y --no-install-recommends build-essential cmake git gfortra
     rm -f get-pip.py && \
     ln -s /usr/lib/x86_64-linux-gnu/libturbojpeg.so.0.1.0 /usr/lib/x86_64-linux-gnu/libturbojpeg.so && \
     git clone https://github.com/NVIDIA/caffe.git /usr/src/caffe -b 'v0.17.2' && \
-    pip install wheel && \
     pip install -r /usr/src/caffe/python/requirements.txt && \
     cd /usr/src/caffe && \
     mkdir build && \
