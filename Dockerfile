@@ -1,4 +1,4 @@
-FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
+FROM nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04
 
 SHELL ["/bin/bash", "-c"]
 
@@ -36,9 +36,10 @@ RUN apt-get install -y --no-install-recommends build-essential cmake git gfortra
       libboost-filesystem-dev libboost-python-dev libboost-system-dev libboost-thread-dev libgflags-dev \
       libgoogle-glog-dev libhdf5-serial-dev libleveldb-dev liblmdb-dev libopencv-dev libsnappy-dev \
       python-all-dev python-dev python-h5py python-matplotlib python-numpy python-opencv python-pil \
-      python-pip python-pydot python-scipy python-skimage python-sklearn \
-      doxygen libnccl2=*+cuda8.0 libnccl-dev=*+cuda8.0 && \
-    git clone https://github.com/NVIDIA/caffe.git /usr/src/caffe -b 'caffe-0.15' && \
+      python-pip python-pydot python-scipy python-skimage python-sklearn libturbojpeg \
+      doxygen libnccl2 libnccl-dev && \
+    ln -s /usr/lib/x86_64-linux-gnu/libturbojpeg.so.0.1.0 /usr/lib/x86_64-linux-gnu/libturbojpeg.so && \
+    git clone https://github.com/NVIDIA/caffe.git /usr/src/caffe -b 'v0.17.2' && \
     pip install wheel && \
     pip install -r /usr/src/caffe/python/requirements.txt && \
     cd /usr/src/caffe && \
@@ -58,7 +59,7 @@ RUN apt-get install -y --no-install-recommends git graphviz python-dev python-fl
 RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
     python get-pip.py --force-reinstall && \
     rm -f get-pip.py && \
-    pip install tensorflow-gpu==1.2.1
+    pip install tensorflow-gpu
     
 # Jupyter
 RUN pip install jupyterlab
