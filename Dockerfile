@@ -99,6 +99,7 @@ RUN apt-get install -y --no-install-recommends git sudo software-properties-comm
         ' }'"\n"\
         ' #endif'"\n"\
         '+#endif' | patch -p1 && \
+    export TORCH_NVCC_FLAGS="-D__CUDA_NO_HALF_OPERATORS__" && \
     cd ../../ && \
     . /opt/intel/mkl/bin/mklvars.sh intel64 && \
     . /opt/intel/bin/compilervars.sh intel64 && \
