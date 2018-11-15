@@ -69,10 +69,8 @@ RUN cd /usr/src && \
     tar zxf magma-2.4.0.tar.gz && \
     rm -f magma-2.4.0.tar.gz && \
     cd magma-2.4.0 && \
-    curl -L -o magma-2.2.0_support_pascal.patch https://git.io/fpszS && \
-    patch -p2 < magma-2.2.0_support_pascal.patch  && \
     cp make.inc-examples/make.inc.mkl-gcc ./make.inc && \
-    echo 'GPU_TARGET := Kepler Maxwell Pascal Volta' >> make.inc && \
+    echo 'GPU_TARGET := sm_30 sm_35 sm_50 sm_52 sm_60 sm_61 sm_70' >> make.inc && \
     export MKLROOT=/opt/intel/mkl && \
     export CUDADIR=/usr/local/cuda && \
     make -j"$(nproc)" && \
