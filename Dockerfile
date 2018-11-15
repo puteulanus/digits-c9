@@ -86,7 +86,7 @@ RUN apt-get install -y --no-install-recommends git sudo software-properties-comm
     cd CMake && \
     ./bootstrap && make -j"$(nproc)" && make install && \
     cd ..  && \
-    rm -rf cmake/3.6/Modules/FindCUDA*
+    rm -rf cmake/3.6/Modules/FindCUDA* && \
     cd extra/cutorch && \
     echo -e 'diff --git a/lib/THC/THCAtomics.cuh b/lib/THC/THCAtomics.cuh'"\n"\
         'index 400875c..ccb7a1c 100644'"\n"\
