@@ -81,6 +81,12 @@ RUN cd /usr/src && \
 RUN apt-get install -y --no-install-recommends git sudo software-properties-common libhdf5-serial-dev liblmdb-dev && \
     git clone https://github.com/torch/distro.git /usr/src/torch --recursive && \
     cd /usr/src/torch && \
+    sudo apt-get purge cmake && \
+    git clone https://github.com/Kitware/CMake.git && \
+    cd CMake && \
+    ./bootstrap && make -j"$(nproc)" && make install && \
+    cd ..  && \
+    rm -rf cmake/3.6/Modules/FindCUDA*
     cd extra/cutorch && \
     echo -e 'diff --git a/lib/THC/THCAtomics.cuh b/lib/THC/THCAtomics.cuh'"\n"\
         'index 400875c..ccb7a1c 100644'"\n"\
@@ -101,18 +107,6 @@ RUN apt-get install -y --no-install-recommends git sudo software-properties-comm
         '+#endif' | patch -p1 && \
     export TORCH_NVCC_FLAGS="-D__CUDA_NO_HALF_OPERATORS__" && \
     cd ../../ && \
-    echo -e 'diff --git a/install.sh b/install.sh'"\n" \
-        'index ad65434..65a0163 100755'"\n" \
-        '--- a/install.sh'"\n" \
-        '+++ b/install.sh'"\n" \
-        '@@ -99,9 +99,6 @@ fi'"\n" \
-        ' if [ -x "$path_to_nvcc" ] || [ -x "$path_to_nvidiasmi" ]'"\n" \
-        ' then'"\n" \
-        '     echo "Found CUDA on your machine. Installing CMake 3.6 modules to get up-to-date FindCUDA"'"\n" \
-        '-    cd ${THIS_DIR}/cmake/3.6 && \'"\n" \
-        '-(cmake -E make_directory build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX="${PREFIX}" \'"\n" \
-        '-        && make install) && echo "FindCuda bits of CMake 3.6 installed" || exit 1'"\n" \
-        ' fi' | patch -p1 && \
     . /opt/intel/mkl/bin/mklvars.sh intel64 && \
     . /opt/intel/bin/compilervars.sh intel64 && \
     export CMAKE_INCLUDE_PATH=$MKL_INCLUDE:$CMAKE_INCLUDE_PATH && \
