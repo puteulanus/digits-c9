@@ -23,6 +23,8 @@ RUN echo '#!/bin/bash' > /root/run && \
     
 ENV SHELL=/usr/bin/zsh
 
+ENTRYPOINT []
+
 EXPOSE 5000
 
 CMD /root/run
