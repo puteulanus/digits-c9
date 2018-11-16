@@ -1,5 +1,7 @@
 FROM nvcr.io/nvidia/digits:18.10
-    
+
+RUN apt-get update
+
 # Jupyter
 RUN pip install jupyterlab
 
