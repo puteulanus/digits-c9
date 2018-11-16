@@ -1,4 +1,4 @@
-FROM nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04
+FROM quay.io/puteulanus/digits-notebook:env
 
 SHELL ["/bin/bash", "-c"]
 
