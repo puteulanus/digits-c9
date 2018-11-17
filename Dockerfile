@@ -81,11 +81,6 @@ RUN cd /usr/src && \
 RUN apt-get install -y --no-install-recommends git sudo software-properties-common libhdf5-serial-dev liblmdb-dev && \
     git clone https://github.com/torch/distro.git /usr/src/torch --recursive && \
     cd /usr/src/torch && \
-    apt-get purge cmake -y && \
-    git clone https://github.com/Kitware/CMake.git && \
-    cd CMake && \
-    ./bootstrap && make -j"$(nproc)" && make install && \
-    cd ..  && \
     rm -rf cmake/3.6/Modules/FindCUDA* && \
     cd extra/cutorch && \
     echo -e 'diff --git a/lib/THC/THCAtomics.cuh b/lib/THC/THCAtomics.cuh'"\n"\
