@@ -20,7 +20,7 @@ ENV MKL_LIBRARY=$MKL_ROOT/lib/intel64
 # Caffe
 RUN apt build-dep caffe-cuda
 RUN apt-get install -y libz-dev libjpeg-dev
-RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
+RUN wget https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py --force-reinstall && \
     rm -f get-pip.py
 RUN git clone https://github.com/BVLC/caffe /usr/src/caffe && \
@@ -45,13 +45,13 @@ RUN pip install tensorflow-gpu
 RUN pip install jupyterlab
 
 # Ngrok
-RUN curl -O https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.deb && \
+RUN wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.deb && \
     dpkg -i ngrok-stable-linux-amd64.deb && \
 rm -f ngrok-stable-linux-amd64.deb
     
 # Oh My Zsh
 RUN apt-get install -y --no-install-recommends zsh && \
-    curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | zsh || true
+    wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | zsh || true
 
 # Entrypoint
 RUN echo '#!/bin/bash' > /root/run && \
