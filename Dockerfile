@@ -5,7 +5,7 @@ SHELL ["/bin/bash", "-c"]
 RUN apt-get update && apt-get install -y libsystemd-dev patch
     
 # MKL
-RUN curl -O https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB && \
+RUN wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB && \
     apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB && \
     rm -f GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB && \
     echo deb https://apt.repos.intel.com/mkl all main > /etc/apt/sources.list.d/intel-mkl.list && \
