@@ -1,8 +1,8 @@
-FROM nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04
+FROM nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04
 
 SHELL ["/bin/bash", "-c"]
 
-RUN apt-get update && apt-get install -y libsystemd-dev patch wget
+RUN apt-get update && apt-get install -y libsystemd-dev patch wget unzip 
     
 # MKL
 RUN wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB && \
@@ -18,17 +18,26 @@ ENV MKL_INCLUDE=$MKL_ROOT/include
 ENV MKL_LIBRARY=$MKL_ROOT/lib/intel64
 
 # Caffe
-RUN apt build-dep caffe-cuda
-RUN apt-get install -y libz-dev libjpeg-dev
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev \
+        libhdf5-serial-dev protobuf-compiler
+RUN apt-get install -y --no-install-recommends libboost-all-dev
+RUN apt-get install -y libz-dev libjpeg-dev libprotobuf-c1 libprotobuf-dev \
+        libgflags-dev libgoogle-glog-dev liblmdb-dev git
+RUN wget -O cmake.sh https://github.com/Kitware/CMake/releases/download/v3.14.0-rc1/cmake-3.14.0-rc1-Linux-x86_64.sh && \
+        bash cmake.sh --skip-license && \
+        rm -rf cmake.sh
 RUN wget https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py --force-reinstall && \
     rm -f get-pip.py
 RUN git clone https://github.com/BVLC/caffe /usr/src/caffe && \
-        pip install -r /usr/src/caffe/python/requirements.txt && \
-        cd /usr/src/caffe && \
+        pip install -r /usr/src/caffe/python/requirements.txt
+RUN cd /usr/src/caffe && \
         mkdir build && \
         cd build && \
+        sed -i 's/20 21(20) 30 35 50 60 61/30 35 50 52 60 61 62 70 72 75/' ../cmake/Cuda.cmake && \
         cmake .. -DBLAS=mkl && \
+        find ./ -name Makefile.config && \
         make -j"$(nproc)" && \
         make install
 
