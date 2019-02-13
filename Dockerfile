@@ -2,7 +2,7 @@ FROM nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04
 
 SHELL ["/bin/bash", "-c"]
 
-RUN apt-get update && apt-get install -y libsystemd-dev patch
+RUN apt-get update && apt-get install -y libsystemd-dev patch wget
     
 # MKL
 RUN wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB && \
