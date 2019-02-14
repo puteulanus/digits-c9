@@ -37,7 +37,6 @@ RUN cd /usr/src/caffe && \
         cd build && \
         sed -i 's/20 21(20) 30 35 50 60 61/30 35 50 52 60 61 62 70 72 75/' ../cmake/Cuda.cmake && \
         cmake .. -DBLAS=mkl && \
-        find ./ -name Makefile.config && \
         make -j"$(nproc)" && \
         make install
 
@@ -46,9 +45,7 @@ RUN apt-get install -y --no-install-recommends git graphviz python-dev python-fl
       python-gevent python-h5py python-numpy python-pil python-pip python-scipy python-tk && \
     git clone https://github.com/NVIDIA/DIGITS.git /root/digits && \
     pip install -r /root/digits/requirements.txt
-
-# TensorFlow
-RUN pip install tensorflow-gpu
+RUN pip install -U numpy
     
 # Jupyter
 RUN pip install jupyterlab
@@ -65,7 +62,6 @@ RUN apt-get install -y --no-install-recommends zsh && \
 # Entrypoint
 RUN echo '#!/bin/bash' > /root/run && \
     echo 'cd /root/digits/' >> /root/run && \
-    echo '. /usr/src/torch/install/bin/torch-activate' >> /root/run && \
     echo './digits-devserver 2>&1 | tee /var/log/digits.log &' >> /root/run && \
     echo 'mkdir -p /notebooks' >> /root/run && \
     echo 'cd /notebooks' >> /root/run && \
@@ -79,5 +75,6 @@ ENV SHELL=/usr/bin/zsh
 WORKDIR /root/digits
 
 EXPOSE 5000
+EXPOSE 8888
 
 CMD /root/run
